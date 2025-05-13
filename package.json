@@ -1,0 +1,12 @@
+{
+  "name": "DTCmpServerSide",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {},
+  "dependencies": {
+    "bootstrap5": "^1.1.9",
+    "datatables.net-bs5": "^2.1.8",
+    "datatables.net-responsive-bs5": "^3.0.3",
+    "jquery": "^3.7.1"
+  }
+}
