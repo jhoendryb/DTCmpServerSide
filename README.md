@@ -69,35 +69,54 @@ Todos los derechos de autor de las bibliotecas utilizadas pertenecen a sus respe
 #### Primer Parámetro (Objeto de Configuración)
 
 | Propiedad | Tipo | Descripción | Ejemplo |
-|-----------|------|-------------|---------|
+|-----------|------|-------------|--------|
 | `titulo` | `string` | Título de la tabla para exportaciones | `'Ciudades'` |
 | `elemento` | `string` | Selector CSS del elemento de la tabla | `'#example'` |
-| `consulta` | `object` | Configuración de consulta SQL dinámica | `{ from: 'tabla', where: 'condición' }` |
+| `consulta` | `object` | Configuración de consulta SQL dinámica con las siguientes propiedades: | `{ from: 'tabla', tabla: 'tabla_base', where: 'condición', order: 'ORDER BY campo' }` |
+| &nbsp;&nbsp;&nbsp;&nbsp;`from` | `string` | Definición completa de la consulta FROM, incluyendo subconsultas | `'ciudad, (SELECT estado FROM estados AS e WHERE e.id_estado = c.id_estado) AS estado'` |
+| &nbsp;&nbsp;&nbsp;&nbsp;`tabla` | `string` | Tabla base de la consulta | `'ciudades AS c'` |
+| &nbsp;&nbsp;&nbsp;&nbsp;`where` | `string` | Condición de filtrado (opcional) | `'id_estado = 1'` |
+| &nbsp;&nbsp;&nbsp;&nbsp;`order` | `string` | Configuración de ordenamiento | `'ORDER BY {order}'` |
 | `caracter` | `boolean` | Habilitar procesamiento de caracteres | `true` |
-| `funcionMaster` | `object` | Configuración de filtros y transformaciones | `{ campo: [params] }` |
-| `columnas` | `array` | Columnas a incluir en la consulta | `['campo1', 'campo2']` |
+| `funcionMaster` | `object` | Configuración de filtros y transformaciones avanzadas | `{ campo: [valorfiltrar, campoFiltrar, campoSelect, tablaFiltrar, separador] }` |
+| `columnas` | `array` | Columnas a incluir en la consulta, con soporte para `ns` (Not Search) | `['ciudad', 'estado:ns']` |
 
-#### Segundo Parámetro (Configuración de Columnas)
+#### Segundo Parámetro: Configuración de DataTables
+
+Este objeto permite configurar directamente las opciones nativas de DataTables, proporcionando total flexibilidad en la personalización de la tabla.
 
 | Propiedad | Tipo | Descripción | Ejemplo |
-|-----------|------|-------------|---------|
-| `columns` | `array` | Definición de columnas de DataTables | `[{ data: 'ciudad' }, { data: 'estado' }]` |
+|-----------|------|-------------|--------|
+| `columns` | `array` | Definición de columnas de DataTables, permite transformaciones y renderizado personalizado | `[{ data: 'ciudad' }, { data: 'estado' }, { data: function(row) { return `<button>Acciones</button>`; } }]` |
+| `*` | `any` | Cualquier opción nativa de DataTables | `{ responsive: true, scrollY: 1200, lengthMenu: [10, 20, 50, 100] }` |
+
+#### Nota Importante
+
+El primer parámetro se enfoca en la generación y procesamiento de datos en el lado del servidor, mientras que el segundo parámetro permite personalizar completamente la presentación y comportamiento de la tabla utilizando las opciones nativas de DataTables.
 
 ### Ejemplo Completo
 
 ```javascript
+// Ejemplo de configuración detallada de tablaDinamica
 tablaOne = tablaDinamica({
-    titulo: 'Ciudades',
+    titulo: 'Ciudades y Estados',
     elemento: '#example',
     caracter: true,
     consulta: {
-        from: 'ciudades c, estados e',
-        where: 'c.id_estado = e.id_estado'
+        // Consulta con subconsulta para obtener el nombre del estado
+        from: 'ciudad, (SELECT estado FROM estados AS e WHERE e.id_estado = c.id_estado) AS estado',
+        tabla: 'ciudades AS c',
+        where: '', // Sin filtro adicional
+        order: 'ORDER BY {order}' // Ordenamiento dinámico
     },
     funcionMaster: {
-        estado: ['{estado}', 'ID', 'NOMBRE', 'estados', '||']
+        // Ejemplo de transformación de datos (comentado en el código original)
+        // estado: ['{estado}', 'ID', 'NOMBRE_USUARIO', 'usuarios', '||']
     },
-    columnas: ['ciudad', 'estado']
+    columnas: [
+        'ciudad', // Columna normal
+        'estado:ns' // Columna con Not Search (ns) para evitar búsquedas
+    ]
 }, {
     columns: [
         { data: 'ciudad' },
