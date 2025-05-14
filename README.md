@@ -152,6 +152,81 @@ Las contribuciones son bienvenidas. Por favor, sigue estos pasos:
 
 [Especificar licencia]
 
+## Uso en Proyectos Personales
+
+### Componentes Esenciales
+
+Para implementar `tablaDinamica` en tu propio proyecto, necesitarás los siguientes archivos:
+
+1. **Archivos JavaScript**:
+   - `DTCmpserverSide.js`: Contiene la implementación principal de la función `tablaDinamica`
+   - `index.js`: Ejemplo de inicialización y uso de la función
+
+2. **Archivos PHP**:
+   - `dataTableServer.php`: Maneja el procesamiento del lado del servidor para las consultas SQL
+
+### Dependencias Requeridas
+
+* jQuery (3.x o superior)
+* DataTables (1.10.x o superior)
+* Bootstrap (opcional, para estilos)
+
+### Pasos de Implementación
+
+1. **Incluir Dependencias**:
+   ```html
+   <!-- CSS -->
+   <link rel="stylesheet" href="path/to/datatables.min.css">
+   <link rel="stylesheet" href="path/to/bootstrap.min.css">
+
+   <!-- JavaScript -->
+   <script src="path/to/jquery.min.js"></script>
+   <script src="path/to/datatables.min.js"></script>
+   <script src="path/to/DTCmpserverSide.js"></script>
+   ```
+
+2. **Configurar Tabla HTML**:
+   ```html
+   <table id="miTabla" class="table">
+       <thead>
+           <tr>
+               <th>Columna 1</th>
+               <th>Columna 2</th>
+           </tr>
+       </thead>
+   </table>
+   ```
+
+3. **Inicializar tablaDinamica**:
+   ```javascript
+   let miTabla = tablaDinamica({
+       titulo: 'Mi Tabla Dinámica',
+       elemento: '#miTabla',
+       consulta: {
+           from: 'mi_tabla',
+           tabla: 'mi_tabla',
+           where: '', // Condiciones de filtro
+           order: 'ORDER BY {order}'
+       },
+       columnas: ['columna1', 'columna2']
+   }, {
+       columns: [
+           { data: 'columna1' },
+           { data: 'columna2' }
+       ]
+   });
+   ```
+
+### Consideraciones Importantes
+
+* **Personalización**: Adapta `dataTableServer.php` para conectarse a tu base de datos
+* **Seguridad**: Implementa validaciones y filtros en el lado del servidor
+* **Rendimiento**: Optimiza las consultas SQL para tablas grandes
+
+### Nota
+
+Este proyecto es un ejemplo de implementación. Los archivos clave (`DTCmpserverSide.js` y `dataTableServer.php`) pueden reutilizarse directamente en otros proyectos, adaptándolos a tus necesidades específicas.
+
 ## Contacto
 
 [Información de contacto]
